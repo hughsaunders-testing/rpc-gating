@@ -8,6 +8,7 @@ def install_ansible(){
     which scl && source /opt/rh/python27/enable
     if [[ ! -d ".venv" ]]; then
         virtualenv --python=/opt/rh/python27/root/usr/bin/python .venv
+        virtualenv --relocatable .venv
     fi
     # hack the selinux module into the venv
     cp -r /usr/lib64/python2.6/site-packages/selinux .venv/lib64/python2.7/site-packages/
@@ -16,7 +17,9 @@ def install_ansible(){
     # These pip commands cannot be combined into one.
     pip install -U six packaging appdirs
     pip install -U setuptools pip
+    virtualenv --relocatable .venv
     pip install -U ansible pyrax
+    virtualenv --relocatable .venv
   """
 }
 
