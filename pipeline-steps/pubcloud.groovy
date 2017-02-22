@@ -51,7 +51,7 @@ def create(Map args){
 
 /* Remove public cloud instances
  */
-def cleanup(){
+def cleanup(Map args){
   withEnv(['ANSIBLE_FORCE_COLOR=true']){
     withCredentials([
       string(
@@ -79,7 +79,7 @@ def cleanup(){
             args: [
               "--private-key=\"${env.JENKINS_SSH_PRIVKEY}\"",
             ],
-            vars: ["instance_name": instance_name]
+            vars: ["instance_name": args.instance_name]
           )
         } // withEnv
       } // directory
@@ -120,8 +120,8 @@ def delPubCloudSlave(Map args){
   common.conditionalStep(
     step_name: 'Cleanup',
     step: {
-      ssh_slave.destroy()
-      cleanup()
+      ssh_slave.destroy(instance_name: args.instance_name)
+      cleanup(instance_name: args.instance_name)
     } //stage
   ) //conditionalStage
 }
