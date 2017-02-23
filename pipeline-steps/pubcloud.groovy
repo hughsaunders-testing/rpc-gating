@@ -126,4 +126,20 @@ def delPubCloudSlave(Map args){
   ) //conditionalStage
 }
 
+/* One func entrypoint to run a script on a single use slave */
+def runonpubcloud(body){
+  instance_name = common.gen_instance_name()
+  getPubCloudSlave(instance_name: instance_name)
+  try{
+    node(instance_name){
+      body()
+    }
+  }catch (e){
+    print(e)
+    throw e
+  }finally {
+    delPubCloudSlave(instance_name: instance_name)
+  }
+}
+
 return this
